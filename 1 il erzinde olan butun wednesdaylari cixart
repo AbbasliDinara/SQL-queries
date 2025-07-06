@@ -1,0 +1,5 @@
+SELECT
+next_day(to_date('31-dec-2024','dd-mon-yyyy'),'wed')+(level-1)*7
+from dual
+connect by level<=53;
+SELECT NEXT_DAY(to_date('31-dec-2024', 'dd-mon-yyyy'), 'WEDNESDAY') FROM dual;
