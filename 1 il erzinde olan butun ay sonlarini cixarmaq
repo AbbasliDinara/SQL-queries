@@ -1,0 +1,6 @@
+---1 il erzinde olan butun ay sonlarini cixarmaq
+
+SELECT
+trunc(add_months(to_date('31-dec-2024','dd-mon-yyyy'),+level),'MM')
+from dual
+connect by level <=12;
