@@ -1,0 +1,9 @@
+ select * from
+ (select JOB_TITLE, MIN_SALARY FROM HR.JOBS)
+ pivot(
+    sum(MIN_SALARY)for JOB_TITLE in (   'President' AS PRESIDENT,
+    'Finance Manager' AS FINANCE_MANAGER,
+    'Accountant' AS ACCOUNTANT))
+
+
+--pivot istifadesi
