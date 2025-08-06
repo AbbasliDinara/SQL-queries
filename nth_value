@@ -1,0 +1,6 @@
+select DISTINCT JOB_ID, NTH_VALUE(MAX_SALARY,1) over (partition by
+JOB_ID order by MAX_SALARY desc
+range between unbounded preceding and unbounded following)
+from HR.JOBS;
+
+--nth_value istifadesi en yuxari neyise tapmaq
