@@ -1,0 +1,5 @@
+--CREDIT_CONTRACTS cədvəlində kreditləri rəsmiləşmə tarixlərinə görə (artan sırada) və kredit məbləğlərinə görə (azalan sırada) sıralayın.
+
+select *
+from customer cr
+order by cr.open_date asc, cr.amount desc;
