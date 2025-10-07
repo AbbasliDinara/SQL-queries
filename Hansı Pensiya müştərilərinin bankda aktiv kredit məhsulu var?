@@ -1,0 +1,6 @@
+--Hansı Pensiya müştərilərinin bankda aktiv kredit məhsulu var?
+
+select cr.cif,cr.income_type, cu.status from customer  cu
+left join credit_contracts cr
+on cu.cif=cr.cif
+where cr.status='ACTIVE' and cr.income_type='Pension'
