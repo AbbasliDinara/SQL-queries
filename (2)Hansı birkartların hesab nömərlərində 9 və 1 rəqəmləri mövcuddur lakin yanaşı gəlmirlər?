@@ -1,0 +1,20 @@
+--Hansı birkartların hesab nömərlərində 9 və 1 rəqəmləri mövcuddur lakin yanaşı gəlmirlər?
+
+
+SELECT PPCPNNUMBER
+FROM poscoupons
+WHERE REGEXP_LIKE(PPCPNNUMBER, '1')         
+  AND REGEXP_LIKE(PPCPNNUMBER, '9')       
+  AND NOT REGEXP_LIKE(PPCPNNUMBER, '19|91');
+
+
+----------2 --------
+
+
+with data2 as (select po.PPCPNNUMBER
+--instr(PPCPNNUMBER,9,1,1) , instr(PPCPNNUMBER,1,1,1)
+ from poscoupons po where instr(PPCPNNUMBER,9,1,1)<>0 and instr(PPCPNNUMBER,1,1,1)<>0) 
+
+select *
+ from data2
+  where PPCPNNUMBER not like  '%19%' and PPCPNNUMBER not like '%91%';
