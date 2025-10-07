@@ -1,0 +1,38 @@
+--Hansı birkartların hesab nömərlərində 9 və 1 rəqəmləri mövcuddur lakin yanaşı gəlmirlər?
+
+--birinci usul
+select *
+ from (
+ select po.PPCPNNUMBER
+--instr(PPCPNNUMBER,9,1,1) , instr(PPCPNNUMBER,1,1,1)
+ from poscoupons po where instr(PPCPNNUMBER,9,1,1)<>0 and instr(PPCPNNUMBER,1,1,1)<>0) 
+ where PPCPNNUMBER not like  '%19%' and PPCPNNUMBER not like '%91%';
+ 
+ --ikinci usul
+select po.PPCPNNUMBER
+from poscoupons po
+where instr(PPCPNNUMBER,'9',1,1)+1<>instr(PPCPNNUMBER,'1',1,1) and instr(PPCPNNUMBER,'9',1,1)-1<>instr(PPCPNNUMBER,'1',1,1) and 
+instr(PPCPNNUMBER,'9',1,1)<>0 and instr(PPCPNNUMBER,'1',1,1)<>0;
+
+ 
+ --tam islemir
+ 
+ 
+select po.PPCPNNUMBER
+from poscoupons po
+where instr(PPCPNNUMBER,'9',1,1)+1<>instr(PPCPNNUMBER,'1',1,1) and instr(PPCPNNUMBER,'9',1,1)-1<>instr(PPCPNNUMBER,'1',1,1) and 
+instr(PPCPNNUMBER,'9',1,1)<>0 and instr(PPCPNNUMBER,'1',1,1)<>0;
+ --ucuncu usul
+
+ select po.PPCPNNUMBER
+from poscoupons po
+where instr(PPCPNNUMBER,19,1,1)=0 and instr(PPCPNNUMBER,91,1,1)=0and --19 ve 91 olmasin
+instr(PPCPNNUMBER,9,1,1)<>0 and instr(PPCPNNUMBER,1,1,1)<>0;
+
+--dorduncu usul
+select *
+ from (
+ select po.PPCPNNUMBER
+--instr(PPCPNNUMBER,9,1,1) , instr(PPCPNNUMBER,1,1,1)
+ from poscoupons po where  PPCPNNUMBER  like  '%1%' and PPCPNNUMBER  like '%9%')
+ where PPCPNNUMBER not like  '%19%' and PPCPNNUMBER not like '%91%';
