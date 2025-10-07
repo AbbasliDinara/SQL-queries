@@ -1,0 +1,19 @@
+select listagg(substr('Dinara',-level,1),' ') within group(order by level asc)
+from dual
+connect by level<= length('Dinara');
+
+or
+
+select listagg(substr('Dinara',level,1),' ') within group(order by level desc)
+from dual
+connect by level<= length('Dinara');
+
+
+---------short way-
+SELECT REVERSE('Dinara') AS ters
+FROM dual;
+
+------other way
+select *
+from students
+where substr(studname,1,length(studname)/2)= reverse(substr(studname,(length(studname)/2)+1,length(studname)));
