@@ -2,3 +2,6 @@
 select sum(substr(4215,level,1)) 
 
 from  dual connect by level<=length(4215);
+
+---other way
+select sum(substr(4215,level,1)) from  dual connect by level<=length(4215);
