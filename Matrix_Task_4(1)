@@ -1,0 +1,215 @@
+/*
+1)Olkeler table yartamaq sutunlari ozunuz teyin etmeli (id,ad,ehali_sayi ,minimal emek haqqi summasi olmali)
+2) olke İd si 10-20 araliginda olanlarin qarsisinda K,21-30 arasinda olanlarda D,31-50 arasinda olanda F,eks halda 'Other' ekrana cixartmaq ,selectde olke İD nide cekmek
+3)Olke adinda Azerbaycan varsa Az,Russian varsa Rus,French varsa FR eks halda 'Other' cixartmaq bu taski hem de decode ile etmek 
+4)Olke adinda azr birlesmelerini hem translate hem de replace ile 145 characterleri ile deyismek
+5)Olke adlarina sol terefden adi 15 e tamamlayana qeder # simvolunu elave etmek
+6)olke adlarinda sag terefde bosluq simvolu olanlari bosluqlarini % simvolu evez etmek
+7)olke adinda ikinci yerde yerlesen a simvolunu b simvolu ile evez etmek
+8)olke id-leri cutdurse,hemin setirin qabaginda cut_id sozu cixartmaq eks halda tek_id sozunu cixartmaq
+9)Ehali sayi 1 milyondan boyuk ve id si tek olan butun olkelerin adinin qabaginda ‘A’
+ehali sayi 500.000 den kicik olan olkelerin adinin qabaginda ‘B’ , eks halda C cixartmaq 
+10)olke adina olan sol terefdeki a herflerini & herfi ile evezleyib ekrana cixartmaq
+11)olke ehali sayi en cox olan ilk 3 olkenin adini ehali syaini ve ehali sayinin 10 faizini ekrana cixartmaq
+12)olke ehasi sayinin idsine olan nisbetini round edib ekrana cixartmaq
+13)minimal emek haqqi meblegi 200-1500 arasinda olan olkeler arasindan en  cox emek haqqi miqdasi teyin eden ilk iki olkenin adini ve emek haqqi summasini ekrana cixartmaq
+*/
+
+CREATE TABLE COUNTRY(
+    COUNTRY_İD NUMBER,
+    AMOUNT_PO NUMBER,
+    MIN_SALARY NUMBER
+);
+
+ALTER TABLE COUNTRY ADD NAME_COUNTRY VARCHAR(20);
+SELECT * FROM COUNTRY;
+--GPT ILE ELEDIM INSERTI SEBRIM CATMADI BIRAZCIQ
+INSERT INTO COUNTRY VALUES (1, 1000, 300, 'Azerbaijan');
+INSERT INTO COUNTRY VALUES (2, 1500, 350, 'Turkey');
+INSERT INTO COUNTRY VALUES (3, 2000, 400, 'Georgia');
+INSERT INTO COUNTRY VALUES (4, 2500, 450, 'Russia');
+INSERT INTO COUNTRY VALUES (5, 3000, 500, 'Ukraine');
+
+INSERT INTO COUNTRY VALUES (6, 1200, 320, 'Kazakhstan');
+INSERT INTO COUNTRY VALUES (7, 1700, 360, 'Uzbekistan');
+INSERT INTO COUNTRY VALUES (8, 2200, 420, 'Kyrgyzstan');
+INSERT INTO COUNTRY VALUES (9, 2700, 480, 'Tajikistan');
+INSERT INTO COUNTRY VALUES (10, 3200, 520, 'Turkmenistan');
+
+INSERT INTO COUNTRY VALUES (11, 1300, 310, 'Germany');
+INSERT INTO COUNTRY VALUES (12, 1600, 340, 'France');
+INSERT INTO COUNTRY VALUES (13, 2100, 410, 'Italy');
+INSERT INTO COUNTRY VALUES (14, 2600, 460, 'Spain');
+INSERT INTO COUNTRY VALUES (15, 3100, 530, 'Poland');
+
+INSERT INTO COUNTRY VALUES (16, 1400, 330, 'UK');
+INSERT INTO COUNTRY VALUES (17, 1900, 370, 'Netherlands');
+INSERT INTO COUNTRY VALUES (18, 2300, 430, 'Belgium');
+INSERT INTO COUNTRY VALUES (19, 2800, 490, 'Sweden');
+INSERT INTO COUNTRY VALUES (20, 3300, 540, 'Norway');
+
+INSERT INTO COUNTRY VALUES (21, 1450, 335, 'Japan');
+INSERT INTO COUNTRY VALUES (22, 1950, 375, 'South Korea');
+INSERT INTO COUNTRY VALUES (23, 2400, 440, 'China');
+INSERT INTO COUNTRY VALUES (24, 2900, 495, 'India');
+INSERT INTO COUNTRY VALUES (25, 3400, 550, 'USA');
+
+INSERT INTO COUNTRY VALUES (26, 1500, 360, 'Japan');
+INSERT INTO COUNTRY VALUES (27, 2000, 420, 'South Korea');
+INSERT INTO COUNTRY VALUES (28, 2500, 470, 'China');
+INSERT INTO COUNTRY VALUES (29, 3000, 520, 'India');
+INSERT INTO COUNTRY VALUES (30, 3500, 580, 'USA');
+
+INSERT INTO COUNTRY VALUES (31, 1100, 290, 'Azerbaijan');
+INSERT INTO COUNTRY VALUES (32, 1600, 350, 'Turkey');
+INSERT INTO COUNTRY VALUES (33, 2100, 410, 'Russia');
+INSERT INTO COUNTRY VALUES (34, 2600, 460, 'Georgia');
+INSERT INTO COUNTRY VALUES (35, 3100, 520, 'Ukraine');
+
+INSERT INTO COUNTRY VALUES (36, 1200, 320, 'Kazakhstan');
+INSERT INTO COUNTRY VALUES (37, 1700, 360, 'Uzbekistan');
+INSERT INTO COUNTRY VALUES (38, 2200, 420, 'Kyrgyzstan');
+INSERT INTO COUNTRY VALUES (39, 2700, 480, 'Turkmenistan');
+INSERT INTO COUNTRY VALUES (40, 3200, 540, 'Tajikistan');
+
+INSERT INTO COUNTRY VALUES (41, 1800, 380, 'Germany');
+INSERT INTO COUNTRY VALUES (42, 2300, 430, 'France');
+INSERT INTO COUNTRY VALUES (43, 2800, 490, 'Italy');
+INSERT INTO COUNTRY VALUES (44, 3300, 550, 'Spain');
+INSERT INTO COUNTRY VALUES (45, 3800, 600, 'Poland');
+
+INSERT INTO COUNTRY VALUES (46, 2000, 420, 'Japan');
+INSERT INTO COUNTRY VALUES (47, 2500, 470, 'South Korea');
+INSERT INTO COUNTRY VALUES (48, 3000, 520, 'China');
+INSERT INTO COUNTRY VALUES (49, 3500, 580, 'India');
+INSERT INTO COUNTRY VALUES (50, 4000, 650, 'USA');
+
+--2) olke İd si 10-20 araliginda olanlarin qarsisinda K,
+--21-30 arasinda olanlarda D,31-50 arasinda olanda F,eks halda 
+--'Other' ekrana cixartmaq ,selectde olke İD nide cekmek
+
+SELECT  COUNTRY_İD,
+CASE
+     WHEN COUNTRY_İD BETWEEN 10 AND 20 THEN 'K'
+     WHEN COUNTRY_İD BETWEEN 21 AND 30 THEN 'D'
+     WHEN COUNTRY_İD BETWEEN 31 AND 50 THEN 'F'
+     ELSE 'Other'
+END AS FILTER_ID
+FROM COUNTRY;
+
+---3)Olke adinda Azerbaycan varsa Az,Russian 
+--varsa Rus,French varsa FR eks halda 'Other'
+ --cixartmaq bu taski hem de decode ile etmek 
+
+SELECT  NAME_COUNTRY,
+CASE
+     WHEN NAME_COUNTRY='Azerbaijan' THEN 'AZ'
+     WHEN NAME_COUNTRY='Russia' THEN 'RUS'
+     WHEN NAME_COUNTRY='France' THEN 'FR'
+     ELSE 'Other'
+END AS FILTER_COUNTRY
+FROM COUNTRY;
+
+
+SELECT  NAME_COUNTRY,
+DECODE(
+    NAME_COUNTRY,
+    'Azerbaijan' , 'AZ',
+    'Russia' , 'RUS',
+    'France' , 'FR',
+    'Other'
+
+) AS FILTER_COUNTRY
+
+FROM COUNTRY;
+
+--4)Olke adinda azr birlesmelerini hem 
+--translate hem de replace ile 145 characterleri ile deyismek
+SELECT * FROM COUNTRY;
+
+SELECT NAME_COUNTRY,REPLACE(NAME_COUNTRY,'Aze','145')
+ FROM COUNTRY;
+
+--5)Olke adlarina sol terefden adi 15 e tamamlayana 
+--qeder # simvolunu elave etmek
+
+SELECT NAME_COUNTRY, LPAD(NAME_COUNTRY,15,'#')
+FROM COUNTRY;
+
+--6)olke adlarinda sag terefde 
+--bosluq simvolu olanlari bosluqlarini % simvolu evez etmek
+
+SELECT NAME_COUNTRY, RTRIM(NAME_COUNTRY,'%')
+FROM COUNTRY;
+
+--7)olke adinda ikinci yerde yerlesen a simvolunu b simvolu ile evez etmek
+SELECT NAME_COUNTRY,
+case
+    when INSTR(NAME_COUNTRY,'a',1,2)=0 then NAME_COUNTRY
+    else SUBSTR(NAME_COUNTRY,1,INSTR(NAME_COUNTRY,'a',1,2)-1)
+||'b' ||
+SUBSTR(NAME_COUNTRY,INSTR(NAME_COUNTRY,'a',1,2)+1)
+
+end as deyisme
+ FROM COUNTRY;
+
+ 
+
+---8)olke id-leri cutdurse,hemin setirin qabaginda cut_id sozu 
+--cixartmaq eks halda tek_id sozunu cixartmaq
+
+select COUNTRY_İD,  
+CASE
+    WHEN  MOD(COUNTRY_İD,2)=0 THEN 'CUT_ID'
+    ELSE 'TEK_ID'
+END AS ADLANDIRMA
+
+from COUNTRY
+;
+--9)Ehali sayi 1 milyondan boyuk ve id si tek olan 
+--butun olkelerin adinin qabaginda ‘A’
+--ehali sayi 500.000 den kicik olan
+ --olkelerin adinin qabaginda ‘B’ , eks halda C cixartmaq 
+
+SELECT NAME_COUNTRY, AMOUNT_PO,
+case
+    when AMOUNT_PO>2000 and mod(COUNTRY_İD,2)<>0 then 'A'|| NAME_COUNTRY
+    when AMOUNT_PO<1500 then 'B'|| NAME_COUNTRY
+    else 'C'|| NAME_COUNTRY
+end as adlandirma
+from COUNTRY;
+
+--10)olke adina olan 
+--sol terefdeki a herflerini & herfi ile evezleyib ekrana cixartmaq
+
+SELECT NAME_COUNTRY,
+case
+    when INSTR(NAME_COUNTRY,'a',1,1)=0 then NAME_COUNTRY
+    else SUBSTR(NAME_COUNTRY,1,INSTR(NAME_COUNTRY,'a',1,1)-1)
+||'&' ||
+SUBSTR(NAME_COUNTRY,INSTR(NAME_COUNTRY,'a',1,1)+1)
+
+end as deyisme
+ FROM COUNTRY;
+--11)olke ehali sayi en cox olan ilk 3 
+--olkenin adini ehali syaini ve ehali sayinin 10 faizini ekrana cixartmaq
+
+
+SELECT NAME_COUNTRY,amount_po, cou.AMOUNT_PO*0.1 as tenpercent_pop
+ from COUNTRY cou
+order by AMOUNT_PO DESC
+FETCH first 3 rows only;
+--12)olke ehasi sayinin idsine olan nisbetini round edib ekrana cixartmaq
+select  COUNTRY_İD, AMOUNT_PO, round(cou.AMOUNT_PO/cou.COUNTRY_İD) as roundd
+from COUNTRY cou;
+
+--13)minimal emek haqqi meblegi 200-1500 arasinda olan 
+--olkeler arasindan en  cox emek haqqi miqdasi teyin eden ilk iki olkenin adini
+-- ve emek haqqi summasini ekrana cixartmaq
+
+select NAME_COUNTRY,MIN_SALARY
+from COUNTRY
+where MIN_SALARY BETWEEN 200 and 1500
+order by MIN_SALARY DESC
+fetch first 2 rows ONLY
+;
