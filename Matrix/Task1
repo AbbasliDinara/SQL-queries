@@ -1,0 +1,72 @@
+--1)Region adlarinda daxilinde 2 a simvolu olan və refionid null olmayanları cixartmaq
+
+select * from hr.REGIONS
+where REGION_NAME like '%a%a%' and REGION_ID is not NULL
+
+
+--2)employee tablede ad və ya soyadda b herfi olanlari ekrana cixartmaq
+select * from hr.EMPLOYEES
+where FIRST_NAME like '%b%' or LAST_NAME like '%b%'
+
+
+--3)employeede salari 1000,2000,500 olanlari ve surname sonunda a olanlari cixartmaq
+
+select * from hr.EMPLOYEES
+where salary in (1000,2000,500) and LAST_NAME like '%a'
+
+
+--4)employeede salary 1000 ve 1800 arasinda olmayanlar arasindan salary, name sutunlarini ekrana cixartmaq
+
+select FIRST_NAME,salary from hr.EMPLOYEES
+where salary not  BETWEEN 1000 and 1800 
+
+
+--5) employee de salarysi 1000 den ferqli olub, surnamede i herfi olmayanlari cixartmaq
+select LAST_NAME,salary from hr.EMPLOYEES
+where salary<>1000 and LAST_NAME not like '%b%'
+
+
+--6) salarysi 1000 den asagi, adi a herfi ve ya A herfi ile baslayanlari cixartmaq
+
+select FIRST_NAME,salary from hr.EMPLOYEES
+where salary<1000 and
+ (FIRST_NAME  like 'A%' or 
+FIRST_NAME like'a%')
+
+
+--7) location adinda 10 simvol olan yalniz locationname leri cixartmaq
+
+select distinct CITY from hr.LOCATIONS
+where length(CITY)=10
+
+--8) jobs tablesinde job adinda N herfi olanlari cixartmaq
+
+select * from hr.JOBS
+where JOB_TITLE like '%N%'
+
+
+--9) bank and brach iki yable qurmaq onlar arasında relationu əks etdirəcək PK və FK tərbiqi
+
+
+CREATE TABLE bank_2 (
+    bank_id INT primary KEY,
+    bank_name VARCHAR(30) NOT NULL,
+    created_date Date
+);
+
+CREATE TABLE branch_2 (
+    branch_id INT primary KEY,
+    branch_name VARCHAR(30) NOT NULL,
+    adress VARCHAR(50),
+    phone VARCHAR(25),
+    bank_id INT,
+
+    CONSTRAINT fk_bank
+    FOREIGN KEY (bank_id)
+    REFERENCES bank_2(bank_id)
+);
+
+INSERT INTO bank_2 VALUES (1, 'Kapital Bank','01-dec-2025');
+INSERT INTO BRANCH_2 VALUES (1, 'Nerimanov filiali','Nerimanov street','994123457891',1);
+select *from bank_2;
+select * from BRANCH_2;
