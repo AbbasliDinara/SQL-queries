@@ -1,0 +1,115 @@
+
+
+
+/*
+1)Filiallar adli table yaratmaq
+Fil_id,Fil_name,Fil_adress
+Constraintleri ozunuzu teyin etmeli
+2)Cari hesablar adli table yaratmali
+ (one to many elaqe olacaq)
+
+account(hesab nomresi) PK olacaq,
+amount(mebleg),date_open ,percent(faiz derece), adli sutunlar olmali
+3)Her tablede insert olmali
+4)Filial adlarini azdan coxa doğru duzmeli elifba sirasi ile
+5) filial tablesine ad hisseye null melumat insert etmek ve asc ve desc istiqametinde siralayaraq hemin nullun siralamada nece deyisdiyini musahide etmek 
+6)Hesabin kodunu coxdan aza dogru siralamaq
+7) summa sutunun 10 faizini coxdan aza dogru siralamaq 
+
+8) Selectde 3 sutun cekmek ve 1 ci sutuna gore coxdan aza 2 ve 3 cu sutuna gore ise melumatlari azdan coxa duzmek
+9) Date sutununu cekmek ve melumatlari coxdan aza dogru siralamaq
+10) Faiz derecesi 10 dan boyuk ve DATE 01.02.2019 tarixinden kicik olan butun melumatlari ilk sətiri skip etməklə ekrana cixartmaq(Ofset tətbiq et)
+11) date 05.11.2015 den boyuk butun melumatlarin faiz derecesin 10 faiz artıraraq vizualda əks etdirmək (sadəcə select lazım)
+12)faiz derecesi 15 den boyuk olan cari hesabin summasini 
+10 faiz azaltmaqla selectdə göstərmək
+13)Filial id sini coxdan aza filial adini ise artan istiqametde siralamaq ve alınan siyahının ilk 2 sətirini ekrana çıxartmaq
+14)Cari hesab tablesinde summa 1000 ve 5000 araliginda olanlarin tarixinden 1 gun cixaraq tarixlərin əvvəlki və 1 gün çıxılmış versiyasını istifadə etmək
+
+
+*/
+
+
+CREATE TABLE filial (
+    fil_id INT primary KEY,
+    fil_name VARCHAR(30) NOT NULL,
+    filial_address VARCHAR(50)
+);
+
+CREATE TABLE accounts (
+    account_id NUMBER primary KEY,
+    amount NUMBER not null,
+    date_open Date,
+    percent VARCHAR(25),
+    fk_filial number  REFERENCES filial(fil_id)
+);
+ALTER TABLE accounts
+ADD account_name VARCHAR(50);
+
+INSERT INTO FILIAL VALUES (1, 'Nesimi','Baki');
+INSERT INTO FILIAL VALUES (2, 'Nizami','Baki');
+INSERT INTO FILIAL VALUES (3, 'Bextiyar','Shaki');
+INSERT INTO FILIAL VALUES (4, 'Elmler','Baki');
+
+
+INSERT INTO accounts VALUES (101, 10230,to_date('17.07.2002','dd.mm.yyyy'),'70%',3);
+INSERT INTO accounts VALUES (102, 6530,to_date('16.03.2004','dd.mm.yyyy'),'10%',2);
+INSERT INTO accounts VALUES (103, 4500,to_date('14.01.1984','dd.mm.yyyy'),'67%',1,'Ferid Agayev');
+UPDATE ACCOUNTS
+SET amount = 'Dinara Abbasli'
+WHERE account_id = 101;
+UPDATE ACCOUNTS
+SET account_name = 'Nargiz Quliyeva'
+WHERE account_id = 102;
+
+select *from FILIAL
+order by FIL_NAME asc
+;
+insert into FILIAL values(6,'Xalqlar dostlugu',null);
+
+select *from FILIAL
+order by FILIAL_ADDRESS asc; --null sonda gelir
+
+select *from FILIAL
+order by FILIAL_ADDRESS desc; --null birinci gelir
+
+select * from accounts
+order by account_id asc;
+
+select *from accounts
+order by amount * 0.1 DESC;
+
+select amount,account_name,percent from ACCOUNTS
+order by amount desc, account_name asc, percent asc;
+
+select * from accounts
+order by date_open desc;
+
+
+UPDATE accounts
+SET percent = REPLACE(percent, '%', '');
+
+ALTER TABLE accounts
+MODIFY percent number;
+
+select * from accounts
+where percent>10 and DATE_OPEN<TO_DATE('2019-02-01', 'YYYY-MM-DD')
+OFFSET 1 rows;
+
+select acc.percent*1.1 as artim, acc.account_id  from accounts acc
+where DATE_OPEN<TO_DATE('2015-11-05', 'YYYY-MM-DD');
+
+select acc.amount*1.1 as artim10,acc.account_id  from accounts acc
+where percent>15;
+
+
+select * from FILIAL
+order by fil_id desc, fil_name asc
+fetch first  2 rows only;
+
+select account_id,amount,date_open as original,date_open - 1 as minus_day
+from accounts
+WHERE amount BETWEEN 1000 AND 5000;
+
+
+select *from FILIAL;
+select * from accounts;
