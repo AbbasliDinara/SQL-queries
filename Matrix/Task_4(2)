@@ -1,0 +1,217 @@
+/*
+Students tablesi yaradin table-də PK olmasin və təkrarlanan şagirdlər əlavə etmnək
+ sagird  adi ,ve Bal ,exam_date olsun 
+10 melumat insert et
+Hansi telebe umumilikde hansi bali almisdir neticesi cixsin
+Ad hissesinde  adinin icerisinde muxtelif yerlerde  ‘a’ herfi olan telebelerin bal ortalamalarini cixarin
+Telebenin umumi ballari cemini  sayina bolerek ortalamani cixarin avg den istifade etmeden
+1) asagidaki formati cixar
+‘Telebe adi   ….. -ci il tarixinde imtahan vermis ve … bal toplamisdir’
+1.1) umumi bal ortalamalari siyahisindan ilk 3 deneni ekrana cixarmaq ve telebelerin adina  sagdan 3 deme * simvolu elave etmek ve adda olan butun a herflerini bosluq ile evez etmek
+1.2)telebelerin bal ortalamalarini tapmaq ve hemin bal ortalamalarinin uzunlugunu taparaq ekrana cixartmaq ve azdan coxa siralamaq
+2)maxsimal bal alan telebenin adina adinin uzunlugu qeder  % isaresi elave etmek
+3) her telebenin nece qiymet aldigini tapmaq ve en cox qiymet alan telebenin adini bas herfi cixarmamaq sertile ekrana sayi ve ad hisseni cixartmaq
+4) bal ortalamasi minimal olan telebenin adini ve balini cixartmaq
+5) umumi bal cemi maximal olan telebenin adini cixartmaq ve adini adin uzunlugu ile birlesdirib cixartmaq 6) adinin uzunlugu 6 dan boyuk olan telebelerin bal ortalamalarini tapmaq ve bu ballar cemini tapmaq hem de bal ortalamaliri + ballar cemini tapmaq yeni selectde 3 column olacaq.
+7)en gec imtahan veren telebe haqqinda melumatlari ekrana cixartmaq
+8)en gec imtahan veren telebenin adinda eger a varsa ilk a nin yerlesdiyi indexin nomresini geri qaytarmaq
+9)en cox imtahan vermis telebe haqqinda melumatlari ekrana cixartmaq
+10) order by –da agregat funsiya istifade etmek
+11)teleber ve ballar cemini cixardaraq ballar cemi en az olan 4 telebeni cixartmaq
+12) is null,is not nulldan istifade ederek bali null olan telebelerin adini cixartmaq
+13)telebelerin adlari ve her telebenin nece bal aldigini cixartmaq ve ad sutununa telebenin adinin uzunlugunu ve soldan & simvolunu birlesdirerek cixartmaq
+14)her telebenin adini ve bal ortalamalarini cixartmaq ve adini cixararken ilk iki herfini ekrana cixartmaq yeni ad sutunundaki adlarda meselen ‘ILAHE’ adi varsa ‘IL’ ekrana cixartmasi
+15) bali 10 ve 90 arasinda olan veadi bos olmayan yeni null olmayan butun telebelerin adlarini ve topladigi ballar cemini ekrana cixartmaq
+16)adlari ve topladigi maximal ballari ekrana cixartmaq eger ad sutununda bosluq simvolu varsa hemin bos simvollari  ‘nothing ‘ character seti ile evez etmek ve ballari yuxaridan asagi artma istiqametinde siralamaq
+*/
+create table students(
+    student_name varchar(50),
+    score NUMBER,
+    exam_date DATE
+);
+
+
+INSERT INTO students VALUES ('Aysel', 85, TO_DATE('2025-12-01','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Ali', 90, TO_DATE('2025-12-02','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Vusal', 75, TO_DATE('2025-12-03','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Nigar', 88, TO_DATE('2025-12-04','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Samir', 92, TO_DATE('2025-12-05','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Amina', 70, TO_DATE('2025-12-06','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Tural', 60, TO_DATE('2025-12-07','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Leyla', 78, TO_DATE('2025-12-08','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Rashad', 82, TO_DATE('2025-12-09','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Fatima', 95, TO_DATE('2025-12-10','YYYY-MM-DD'));
+
+INSERT INTO students VALUES ('Aysel', 28, TO_DATE('2025-11-01','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Ali', 85, TO_DATE('2025-11-03','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Vusal', 20, TO_DATE('2025-11-05','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Nigar', 50, TO_DATE('2025-11-07','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Samir', 75, TO_DATE('2025-11-09','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Amina', 35, TO_DATE('2025-11-11','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Tural', 95, TO_DATE('2025-11-13','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Leyla', 82, TO_DATE('2025-11-15','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Rashad', 28, TO_DATE('2025-11-17','YYYY-MM-DD'));
+INSERT INTO students VALUES ('Fatima', 97, TO_DATE('2025-11-19','YYYY-MM-DD'));
+--Hansi telebe umumilikde hansi bali almisdir neticesi cixsin
+--Ad hissesinde  adinin icerisinde muxtelif yerlerde  ‘a’ herfi olan telebelerin bal ortalamalarini cixarin
+--Telebenin umumi ballari cemini  sayina bolerek ortalamani cixarin avg den istifade etmeden
+
+
+select STUDENT_NAME,round((sum(stu.SCORE)/count(*)))as avg_stu from students stu
+where instr(lower(STUDENT_NAME),'a',1,1)<>0
+GROUP by STUDENT_NAME;
+
+--1) asagidaki formati cixar
+--‘Telebe adi   ….. -ci il tarixinde imtahan vermis ve … bal toplamisdir’
+
+select STUDENT_NAME || EXAM_DATE ||'-ci il tarixinde imtahan vermis ve '|| score ||' bal toplamisdi' 
+
+from students;
+
+--1.1) umumi bal ortalamalari siyahisindan ilk 3 deneni ekrana cixarmaq 
+--ve telebelerin adina  sagdan 3 deme * simvolu elave etmek ve
+-- adda olan butun a herflerini bosluq ile evez etmek
+select student_name,concat(replace(lower(student_name),'a',' '),'*'),round((sum(SCORE)/count(*)))as avg_stu 
+from students 
+GROUP by STUDENT_NAME
+fetch first 3 rows only;
+
+--1.2)telebelerin bal ortalamalarini tapmaq ve hemin bal 
+--ortalamalarinin uzunlugunu taparaq ekrana cixartmaq ve azdan coxa siralamaq
+
+select STUDENT_NAME,sum(stu.SCORE)/count(*) as avg_stu,
+        length(to_char(sum(stu.SCORE)/count(*))) as length_score
+from students stu
+where instr(lower(STUDENT_NAME),'a',1,1)<>0
+GROUP by STUDENT_NAME;
+
+--2)maxsimal bal alan telebenin adina adinin uzunlugu qeder  % isaresi elave etmek
+select student_name, rpad(student_name, 2*length(STUDENT_NAME),'%'),score
+from students
+order by score desc
+fetch first 1 rows only;
+
+--3) her telebenin nece qiymet aldigini tapmaq ve 
+--en cox qiymet alan telebenin adini bas herfi 
+--cixarmamaq sertile ekrana sayi ve ad hisseni cixartmaq
+
+
+
+    SELECT replace(STUDENT_NAME,substr(STUDENT_NAME,1,1),''),count(*)
+    FROM students
+    HAVING sum(score) = (SELECT MAX(max_sco) FROM (SELECT STUDENT_NAME,
+     SUM(SCORE) as max_sco 
+    FROM STUDENTS
+    GROUP BY STUDENT_NAME)) 
+    GROUP BY STUDENT_NAME
+    ;
+--4) bal ortalamasi minimal olan telebenin adini ve balini cixartmaq
+
+select student_name, score, avg(score) as avgg
+from students
+GROUP by student_name, score
+order by avgg asc
+fetch first 1 rows only;
+
+--5) umumi bal cemi maximal olan telebenin adini cixartmaq 
+--ve adini adin uzunlugu ile birlesdirib cixartmaq
+
+
+select student_name, student_name || length(student_name), sum(score) as summ
+from students
+GROUP by student_name, score
+order by summ desc
+fetch first 1 rows only;
+
+--6) adinin uzunlugu 6 dan boyuk olan telebelerin 
+--bal ortalamalarini tapmaq ve bu ballar cemini
+-- tapmaq hem de bal ortalamaliri + ballar cemini tapmaq yeni 
+--selectde 3 column olacaq.
+
+select student_name , avg(score) as avgg,sum(score) as summ,sum(score)+avg(score)
+from students
+where length(student_name)>6
+GROUP by STUDENT_NAME
+order by summ desc;
+
+--7)en gec imtahan veren telebe haqqinda melumatlari ekrana cixartmaq
+
+select * from students
+order by EXAM_DATE desc
+fetch FIRST 1 rows only;
+
+
+--8)en gec imtahan veren telebenin adinda eger
+-- a varsa ilk a nin yerlesdiyi indexin nomresini geri qaytarmaq
+
+select
+case 
+    when instr(lower(student_name),'a',1,1)<>0 then instr(lower(student_name),'a',1,1)
+    else 0
+end as atapma
+from students
+order by EXAM_DATE desc
+fetch FIRST 1 rows only;
+
+--9)en cox imtahan vermis telebe haqqinda melumatlari ekrana cixartmaq
+
+
+SELECT student_name, COUNT(*) AS countt
+FROM students
+GROUP BY student_name
+ORDER BY countt DESC
+FETCH FIRST 1 ROWS ONLY;
+
+--11) order by –da agregat funsiya istifade etmek
+--teleber ve ballar cemini cixardaraq ballar cemi 
+--en az olan 4 telebeni cixartmaq
+
+
+SELECT student_name, sum(score) as summ
+FROM students
+GROUP BY student_name
+ORDER BY summ asc
+FETCH FIRST 4 ROWS ONLY;
+
+--12) is null,is not nulldan istifade ederek bali 
+--null olan telebelerin adini cixartmaq
+
+
+SELECT student_name, score
+FROM students
+where score is null;
+
+--13)telebelerin adlari ve her telebenin nece 
+--bal aldigini cixartmaq ve ad sutununa telebenin
+-- adinin uzunlugunu ve soldan & simvolunu birlesdirerek cixartmaq
+
+
+select student_name,length(student_name)||'&', score
+from students;
+
+--14)her telebenin adini ve bal ortalamalarini cixartmaq ve
+-- adini cixararken ilk iki herfini ekrana cixartmaq yeni ad 
+--sutunundaki adlarda meselen ‘ILAHE’ adi varsa ‘IL’ ekrana cixartmasi
+
+select student_name,substr(student_name,1,2),avg(score)
+from students
+group by student_name;
+
+--15) bali 10 ve 90 arasinda olan veadi bos olmayan yeni 
+--null olmayan butun telebelerin adlarini ve
+-- topladigi ballar cemini ekrana cixartmaq
+
+select sum(score),student_name
+from STUDENTS
+where score BETWEEN 10 and 90 and score is not null
+group by student_name;
+
+--16)adlari ve topladigi maximal ballari ekrana cixartmaq eger ad 
+--sutununda bosluq simvolu varsa hemin bos simvollari  
+--‘nothing ‘ character seti ile evez etmek 
+--ve ballari yuxaridan asagi artma istiqametinde siralamaq
+select max(score)as maxx,student_name, replace(student_name,' ','nothing')
+from STUDENTS
+group by student_name
+order by maxx asc
+;
